@@ -1,0 +1,936 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Valentine 🎁💌</title>
+  <style>
+    @keyframes riseFade{
+  from{ opacity:0; transform: translateY(12px); }
+  to{ opacity:1; transform: translateY(0); }
+}
+.reveal{ animation: riseFade .7s ease both; }
+.revealDelay{ animation: riseFade .7s ease both; animation-delay: .15s; }
+
+    :root{
+      --bgA:#ffd1e8;
+      --bgB:#ffb3d9;
+
+      --shadow: 0 22px 70px rgba(0,0,0,.12);
+      --text:#2b2b2b;
+
+      --p1:#ff6fb7;
+      --p2:#b38cff;
+      --p3:#ffe1f1;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      min-height:100vh;
+      color:var(--text);
+      background:
+        radial-gradient(1000px 650px at 15% 18%, #ffd7ee, transparent 62%),
+        radial-gradient(900px 600px at 85% 25%, #ffc2e3, transparent 60%),
+        radial-gradient(900px 600px at 50% 95%, #fff1f8, transparent 55%),
+        linear-gradient(135deg, var(--bgA), var(--bgB));
+      overflow:hidden;
+    }
+
+    /* bg falling hearts */
+    .hearts{ position:fixed; inset:0; pointer-events:none; overflow:hidden; }
+    .heart{
+      position:absolute; top:-12vh; opacity:.22;
+      animation: fall linear infinite;
+      transform: translateY(-10vh);
+      will-change: transform;
+      text-shadow: 0 10px 18px rgba(0,0,0,.12);
+      filter: blur(.1px);
+    }
+    @keyframes fall{ to{ transform: translateY(120vh) translateX(var(--drift)); } }
+
+    /* sparkles */
+    .sparkle{ position:fixed; inset:0; pointer-events:none; opacity:.16; filter: blur(.2px); }
+    .sparkle span{
+      position:absolute; width:10px;height:10px; border-radius:50%;
+      background: radial-gradient(circle at 30% 30%, #fff, rgba(255,255,255,0));
+      animation: float 8s linear infinite;
+    }
+    @keyframes float{
+      from{ transform: translateY(120vh) translateX(0) scale(.8); }
+      to{ transform: translateY(-20vh) translateX(40px) scale(1.2); }
+    }
+
+    /* scenes */
+    .scene{
+      position:fixed;
+      z-index:5;
+      inset:0;
+      display:grid;
+      place-items:center;
+      padding:22px;
+      opacity:1;
+      transform: translateY(0);
+      transition: opacity 360ms ease, transform 360ms ease;
+    }
+    .scene.in{ opacity:0; transform: translateY(10px) scale(.985); pointer-events:none; }
+    .scene.show{ opacity:1; transform: translateY(0) scale(1); pointer-events:auto; }
+
+    /* shared wrapper */
+    .wrap{
+      width:min(560px, 92vw);
+      background: rgba(255,255,255,.72);
+      border:1px solid rgba(255,255,255,.75);
+      border-radius:24px;
+      box-shadow: var(--shadow);
+      padding:24px 18px;
+      text-align:center;
+      position:relative;
+      backdrop-filter: blur(10px);
+    }
+    h1{ margin:6px 0 6px; font-size: clamp(22px, 4vw, 28px); letter-spacing:.2px; }
+    p{ margin:0 0 14px; opacity:.85; font-size: 14.5px; line-height:1.35; }
+
+    /* ---------- PART 1: Gift ---------- */
+    .stage{ position:relative; height: 320px; display:grid; place-items:center; }
+    .gift{
+      --s: 1; --rx: 0deg; --ry: 0deg; --rz: 0deg; --tx: 0px; --ty: 0px;
+      width: 170px; height: 170px;
+      cursor:pointer; user-select:none;
+      transform: translate(var(--tx), var(--ty)) rotateX(var(--rx)) rotateY(var(--ry)) rotate(var(--rz)) scale(var(--s));
+      transition: transform 120ms cubic-bezier(.18,.8,.22,1), filter 180ms ease;
+      filter: drop-shadow(0 18px 18px rgba(0,0,0,.18));
+      position:relative; perspective: 800px; touch-action: manipulation;
+    }
+    .box{
+      position:absolute; inset: 22% 0 0 0; border-radius:18px;
+      background: linear-gradient(135deg, #ff7ac3, #ff3d9a);
+      box-shadow: inset 0 10px 0 rgba(255,255,255,.25);
+    }
+    .box::before{
+      content:""; position:absolute; left:50%; top:0; transform: translateX(-50%);
+      width: 22%; height:100%; border-radius:14px;
+      background: linear-gradient(180deg, #fff1a6, #ffd24d); opacity:.95;
+    }
+    .lid{
+      position:absolute; left:-4%; right:-4%; top:10%; height:28%; border-radius:18px;
+      background: linear-gradient(135deg, #ffb0da, #ff56ad);
+      box-shadow: inset 0 8px 0 rgba(255,255,255,.28);
+      transform-origin: 50% 90%;
+    }
+    .lid::before{
+      content:""; position:absolute; left:50%; top:0; transform: translateX(-50%);
+      width: 24%; height:100%; border-radius:14px;
+      background: linear-gradient(180deg, #fff1a6, #ffd24d); opacity:.95;
+    }
+    .bow{ position:absolute; left:50%; top:2%; transform: translateX(-50%); width:54%; height:40%; }
+    .bow::before,.bow::after{
+      content:""; position:absolute; width:48%; height:70%; top:12%;
+      background: linear-gradient(135deg, #7a5cff, #a08dff);
+      border-radius: 50% 50% 50% 0;
+      box-shadow: inset 0 8px 0 rgba(255,255,255,.22);
+    }
+    .bow::before{ left:0; transform: rotate(-18deg); }
+    .bow::after{ right:0; border-radius: 50% 50% 0 50%; transform: rotate(18deg); }
+    .knot{
+      position:absolute; left:50%; top:38%; transform: translate(-50%,-50%);
+      width:18%; height:22%; border-radius:12px;
+      background: linear-gradient(135deg, #8a74ff, #6a52ff);
+      box-shadow: inset 0 6px 0 rgba(255,255,255,.2);
+    }
+    .hint{
+      margin-top:12px; font-weight:700; color: rgba(0,0,0,.65);
+      display:inline-flex; align-items:center; gap:8px;
+      background: rgba(255,255,255,.75);
+      border: 1px solid rgba(255,255,255,.82);
+      padding:10px 14px; border-radius: 999px;
+    }
+    .pulse{
+      width:10px;height:10px;border-radius:50%;
+      background: #ff3d9a;
+      box-shadow: 0 0 0 0 rgba(255,61,154,.55);
+      animation: pulse 1.2s infinite;
+    }
+    @keyframes pulse{
+      0%{ box-shadow: 0 0 0 0 rgba(255,61,154,.55); }
+      70%{ box-shadow: 0 0 0 12px rgba(255,61,154,0); }
+      100%{ box-shadow: 0 0 0 0 rgba(255,61,154,0); }
+    }
+    .pop{
+      position:absolute; width:10px;height:10px; border-radius:50%;
+      background: radial-gradient(circle at 30% 30%, #fff, rgba(255,255,255,0));
+      pointer-events:none;
+      animation: pop 650ms ease-out forwards;
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,.15));
+    }
+    @keyframes pop{
+      0%{ transform: translate(0,0) scale(.8); opacity:1; }
+      100%{ transform: translate(var(--dx), var(--dy)) scale(1.35); opacity:0; }
+    }
+
+    /* ---------- SCENE 2: Mini game ---------- */
+    .gameCard{
+      width: min(720px, 94vw);
+      background: rgba(255,255,255,.86);
+      border:1px solid rgba(255,255,255,.92);
+      border-radius:28px;
+      padding: 28px 24px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      text-align:center;
+      position:relative;
+      overflow:hidden;
+    }
+    .gameTitle{ font-size: clamp(22px, 4.2vw, 30px); margin: 6px 0 10px; font-weight: 900; }
+    .gameSub{ margin:0 0 18px; opacity:.8; }
+
+    .choiceRow{
+      display:flex;
+      gap:12px;
+      justify-content:center;
+      flex-wrap:wrap;
+      position:relative;
+      padding: 12px 0 6px;
+      min-height: 92px;
+    }
+    .btnChoice{
+      border: 1px solid rgba(0,0,0,.08);
+      cursor:pointer;
+      font-weight:900;
+      padding:14px 16px;
+      border-radius:16px;
+      background: rgba(255,255,255,.55);
+      backdrop-filter: blur(6px);
+      transition: transform .15s ease, background .15s ease, opacity .15s ease;
+      font-size:14.5px;
+      box-shadow: 0 14px 30px rgba(0,0,0,.06);
+      color: rgba(0,0,0,.78);
+      min-width: 140px;
+    }
+    .btnChoice:active{ transform: scale(.98); }
+
+    /* "Tidak" kabur tapi tampil sama */
+    .btnRunner{
+      position:absolute;
+      left:50%;
+      top: 12px;
+      transform: translateX(-50%);
+      will-change: transform;
+    }
+
+    .warn{
+      width: min(520px, 92vw);
+      margin: 12px auto 0;
+      background: rgba(255, 255, 255, .62);
+      border: 1px solid rgba(0,0,0,.08);
+      padding: 10px 12px;
+      border-radius: 14px;
+      font-weight: 900;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity .22s ease, transform .22s ease;
+    }
+    .warn.show{ opacity: 1; transform: translateY(0); }
+
+    /* ---------- SCENE 3: Card (gradient + slot gambar) ---------- */
+    .card{
+      width: min(900px, 96vw);
+      border-radius: 30px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      position:relative;
+      overflow:hidden;
+
+      /* ✅ gradasi halus */
+      background:
+        radial-gradient(520px 360px at 18% 18%, rgba(255,111,183,.25), transparent 62%),
+        radial-gradient(540px 380px at 82% 25%, rgba(179,140,255,.22), transparent 65%),
+        linear-gradient(135deg, rgba(255,255,255,.78), rgba(255,255,255,.56));
+      border: 1px solid rgba(255,255,255,.78);
+    }
+
+    /* pattern hearts tipis */
+    .card::before{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        radial-gradient(circle at 10px 10px, rgba(255,61,154,.12) 2px, transparent 3px) 0 0/28px 28px,
+        radial-gradient(circle at 10px 10px, rgba(122,92,255,.10) 2px, transparent 3px) 14px 14px/28px 28px;
+      opacity:.35;
+      pointer-events:none;
+      mask: linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.18));
+    }
+
+    /* glow vignette */
+    .card::after{
+      content:"";
+      position:absolute; inset:-60px;
+      background:
+        radial-gradient(420px 260px at 18% 30%, rgba(255,61,154,.18), transparent 60%),
+        radial-gradient(440px 300px at 86% 20%, rgba(122,92,255,.16), transparent 65%);
+      pointer-events:none;
+      opacity:.9;
+    }
+
+    .cardInner{
+      position:relative;
+      z-index:1;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    @media (max-width: 760px){
+      .cardInner{ grid-template-columns: 1fr; }
+      .sideArt{ order:-1; }
+    }
+
+    .mainText{
+      background: rgba(255,255,255,.50);
+      border: 1px solid rgba(255,255,255,.70);
+      border-radius: 22px;
+      padding: 18px 16px;
+      backdrop-filter: blur(8px);
+    }
+
+    .badge{
+      display:inline-flex; gap:8px; align-items:center;
+      padding:10px 14px; border-radius:999px;
+      background: rgba(255,255,255,.65);
+      border:1px solid rgba(255,255,255,.82);
+      font-weight:900; margin-bottom:12px;
+      font-size:14px;
+    }
+    .mainText h2{ margin:6px 0 12px; font-size: clamp(22px, 4.2vw, 30px); }
+    .msg{
+      margin:0;
+      font-size: clamp(16px, 2.8vw, 18.5px);
+      line-height:1.70;
+      white-space: pre-line;
+      min-height: 180px;
+    }
+
+    /* slot gambar */
+    .sideArt{
+      display:grid;
+      gap:12px;
+      align-content:start;
+    }
+    .imgBox{
+      width:100%;
+      aspect-ratio: 4/5;
+      border-radius: 22px;
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,.75);
+      background: rgba(255,255,255,.45);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 14px 30px rgba(0,0,0,.08);
+      position:relative;
+    }
+    .imgBox img{
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      display:block;
+    }
+    .imgHint{
+      position:absolute;
+      inset:0;
+      display:grid;
+      place-items:center;
+      font-weight:900;
+      color: rgba(0,0,0,.55);
+      padding: 14px;
+      text-align:center;
+    }
+
+    /* tombol bawah card (opsional) */
+    .controls{
+      margin-top: 14px;
+      display:flex;
+      justify-content:flex-end;
+      gap:10px;
+      flex-wrap:wrap;
+      position:relative;
+      z-index:1;
+    }
+    .btn{
+      border:0; cursor:pointer; font-weight:900;
+      padding:14px 16px; border-radius:16px;
+      background: rgba(255,255,255,.55);
+      border: 1px solid rgba(255,255,255,.82);
+      transition: transform .15s ease, opacity .15s ease;
+      font-size:14.5px;
+      backdrop-filter: blur(8px);
+    }
+    .btn:active{ transform: scale(.98); }
+
+    .tapHint{
+      margin-top:10px;
+      font-size:12px;
+      opacity:.7;
+      text-align:center;
+      user-select:none;
+      position:relative;
+      z-index:1;
+    }
+  
+/* ---------- ENVELOPE SCENE ---------- */
+.envWrap{
+  width: min(720px, 94vw);
+  background: rgba(255,255,255,.70);
+  border: 1px solid rgba(255,255,255,.82);
+  border-radius: 28px;
+  padding: 26px 22px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+  text-align:center;
+}
+.envTitle{
+  font-weight: 900;
+  font-size: clamp(20px, 4vw, 28px);
+  margin: 2px 0 16px;
+}
+.envHint{
+  margin-top: 14px;
+  font-weight: 800;
+  opacity: .7;
+  font-size: 13px;
+}
+.envelope{
+  width: min(360px, 82vw);
+  height: 240px;
+  margin: 0 auto;
+  position: relative;
+  cursor: pointer;
+  user-select:none;
+  transform: translateY(0);
+  transition: transform .2s ease;
+}
+.envelope:active{ transform: translateY(2px) scale(.995); }
+.envShadow{
+  position:absolute; left:50%; top: 82%;
+  width: 70%; height: 18%;
+  transform: translateX(-50%);
+  background: radial-gradient(closest-side, rgba(0,0,0,.18), transparent 70%);
+  filter: blur(2px);
+  opacity: .55;
+}
+.envBack{
+  position:absolute; inset: 34px 0 0 0;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(255,255,255,.85), rgba(255,255,255,.55));
+  border: 1px solid rgba(0,0,0,.06);
+  box-shadow: 0 18px 40px rgba(0,0,0,.10);
+}
+.envPocket{
+  position:absolute; left:0; right:0; top: 88px; bottom: 0;
+  border-radius: 0 0 18px 18px;
+  background:
+    linear-gradient(135deg, rgba(255,111,183,.35), rgba(179,140,255,.25)),
+    linear-gradient(135deg, rgba(255,255,255,.65), rgba(255,255,255,.35));
+  border: 1px solid rgba(0,0,0,.06);
+  clip-path: polygon(0 0, 50% 50%, 100% 0, 100% 100%, 0 100%);
+}
+.envFlap{
+  position:absolute; left:0; right:0; top: 34px; height: 130px;
+  border-radius: 18px 18px 0 0;
+  background:
+    linear-gradient(135deg, rgba(255,111,183,.30), rgba(179,140,255,.22)),
+    linear-gradient(135deg, rgba(255,255,255,.70), rgba(255,255,255,.40));
+  border: 1px solid rgba(0,0,0,.06);
+  clip-path: polygon(0 0, 50% 70%, 100% 0, 100% 100%, 0 100%);
+  transform-origin: 50% 0%;
+  transform: rotateX(0deg);
+  transition: transform .55s cubic-bezier(.2,.85,.2,1);
+}
+.envLetter{
+  position:absolute;
+  left: 18px; right: 18px;
+  top: 56px;
+  height: 160px;
+  border-radius: 14px;
+  background: rgba(255,255,255,.92);
+  border: 1px solid rgba(0,0,0,.06);
+  box-shadow: 0 16px 32px rgba(0,0,0,.10);
+  transform: translateY(26px);
+  transition: transform .7s cubic-bezier(.16,.9,.18,1);
+  overflow:hidden;
+}
+.letterTop{
+  height: 18px;
+  background: linear-gradient(90deg, rgba(255,111,183,.25), rgba(179,140,255,.18));
+}
+.letterLine{
+  height: 8px;
+  margin: 12px 14px;
+  border-radius: 999px;
+  background: rgba(0,0,0,.08);
+}
+.letterLine.short{ width: 60%; }
+.letterHeart{
+  position:absolute;
+  right: 12px;
+  bottom: 10px;
+  font-size: 20px;
+  opacity: .85;
+}
+.envelope.open .envFlap{ transform: rotateX(170deg); }
+.envelope.open .envLetter{ transform: translateY(-24px); }
+
+/* ---------- FOTO AUTO GERAK (DVD) di background kiri-kanan ---------- */
+.dvdBg{
+  position:fixed;
+  left: 24px; top: 24px;
+  width: 86px; height: 86px;
+  border-radius: 22px;
+  overflow:hidden;
+  border: 1px solid rgba(255,255,255,.78);
+  background: rgba(255,255,255,.45);
+  box-shadow: 0 16px 36px rgba(0,0,0,.10);
+  backdrop-filter: blur(8px);
+  z-index: 2;              /* di atas background, di bawah card */
+  pointer-events:none;
+  opacity: .95;
+  display:none;
+}
+.dvdBg.show{ display:block; }
+.dvdBg img{
+  width:100%;
+  height:100%;
+  object-fit: cover;
+  display:block;
+}
+</style>
+</head>
+<body>
+  <div class="hearts" aria-hidden="true" id="hearts"></div>
+  <div class="sparkle" aria-hidden="true" id="sparkle"></div>
+
+  <!-- FOTO AUTO MOVE (DVD) kecil-kecil di background -->
+  <div class="dvdBg" id="dvdBg1" aria-hidden="true"><img src="WhatsApp Image 2026-02-12 at 01.00.25.jpeg" alt="foto" /></div>
+  <div class="dvdBg" id="dvdBg2" aria-hidden="true"><img src="WhatsApp Image 2026-02-12 at 01.00.25.jpeg" alt="foto" /></div>
+  <div class="dvdBg" id="dvdBg3" aria-hidden="true"><img src="WhatsApp Image 2026-02-12 at 01.00.25.jpeg" alt="foto" /></div>
+
+
+  <!-- SCENE 1 -->
+  <section class="scene show" id="sceneGift">
+    <div class="wrap">
+      <h1>Tap Kado-nya 🎁</h1>
+      <p>Tap 10x… habis itu lanjut 😄</p>
+
+      <div class="stage">
+        <div class="gift" id="gift" role="button" tabindex="0" aria-label="Tap kado">
+          <div class="lid"></div>
+          <div class="bow"><div class="knot"></div></div>
+          <div class="box"></div>
+        </div>
+      </div>
+
+      <div class="hint"><span class="pulse"></span> Tap yang semangat, king 😄</div>
+    </div>
+  </section>
+
+  <!-- SCENE 2 -->
+  <section class="scene in" id="sceneGame" aria-hidden="true">
+    <div class="gameCard">
+      <div class="gameTitle">Mau lanjut gaa? 😏💗</div>
+      <p class="gameSub">Pilih salah satu yaa… (tapi ada syaratnya 🤭)</p>
+
+      <div class="choiceRow" id="choiceRow">
+        <button class="btnChoice" id="btnIya">Iya</button>
+        <button class="btnChoice btnRunner" id="btnTidak">Tidak</button>
+        <button class="btnChoice" id="btnBanget">Mau bangett</button>
+      </div>
+
+      <div class="warn" id="warnBox">⚠️ Harus pilih “Mau bangett” dulu yaa 😤💗</div>
+    </div>
+  </section>
+
+
+  <!-- SCENE ENVELOPE -->
+  <section class="scene in" id="sceneEnvelope" aria-hidden="true">
+    <div class="envWrap">
+      <div class="envTitle">Satu surat buat kamu… 💌</div>
+
+      <div class="envelope" id="envelope" aria-label="Buka surat">
+        <div class="envShadow"></div>
+
+        <div class="envBack"></div>
+        <div class="envPocket"></div>
+
+        <div class="envLetter" id="envLetter">
+          <div class="letterTop"></div>
+          <div class="letterLine"></div>
+          <div class="letterLine"></div>
+          <div class="letterLine short"></div>
+          <div class="letterHeart">💗</div>
+        </div>
+
+        <div class="envFlap"></div>
+      </div>
+
+      <div class="envHint" id="envHint">Klik suratnya ya 😄</div>
+    </div>
+  </section>
+
+  <!-- SCENE 3 -->
+  <section class="scene in" id="sceneCard" aria-hidden="true">
+    <div class="card" id="card">
+      <div class="cardInner">
+        <div class="mainText">
+          <div class="badge">💗 Valentine Card</div>
+          <h2 id="title" class="reveal">Hai kamu… 💖</h2>
+          <p class="msg revealDelay" id="msg"></p>
+        </div>
+
+      </div>
+
+      <div class="controls">
+        <button class="btn" id="doneBtn">Selesai ✅</button>
+      </div>
+      <div class="tapHint">Tip: bisa klik “Selesai” aja, atau biarin di halaman ini 😄</div>
+    </div>
+  </section>
+
+  <script>
+    // make bg hearts
+    const heartsWrap = document.getElementById("hearts");
+    const heartChars = ["❤","💗","💖","💕","💘","💞"];
+    const HEARTS = 30;
+    for(let i=0;i<HEARTS;i++){
+      const h = document.createElement("div");
+      h.className = "heart";
+      h.textContent = heartChars[Math.floor(Math.random()*heartChars.length)];
+      h.style.left = Math.random()*100 + "%";
+      h.style.fontSize = (12 + Math.random()*22) + "px";
+      h.style.opacity = (0.08 + Math.random()*0.22);
+      h.style.setProperty("--drift", (Math.random()*120 - 60) + "px");
+      const dur = 7 + Math.random()*8;
+      h.style.animationDuration = dur + "s";
+      h.style.animationDelay = (-Math.random()*dur) + "s";
+      heartsWrap.appendChild(h);
+    }
+
+    // sparkles
+    const sp = document.getElementById("sparkle");
+    for(let i=0;i<18;i++){
+      const s = document.createElement("span");
+      s.style.left = Math.random()*100 + "%";
+      s.style.top = (80 + Math.random()*60) + "%";
+      s.style.animationDelay = (-Math.random()*8) + "s";
+      s.style.opacity = (0.06 + Math.random()*0.2);
+      s.style.transform = `scale(${0.6 + Math.random()*1.2})`;
+      sp.appendChild(s);
+    }
+
+    // scenes
+    const sceneGift = document.getElementById("sceneGift");
+    const sceneGame = document.getElementById("sceneGame");
+    const sceneEnvelope = document.getElementById("sceneEnvelope");
+    const sceneCard = document.getElementById("sceneCard");
+
+    function showScene(target){
+      [sceneGift, sceneGame, sceneEnvelope, sceneCard].forEach(s=>{
+        s.classList.add("in");
+        s.classList.remove("show");
+        s.setAttribute("aria-hidden","true");
+      });
+      target.classList.remove("in");
+      target.classList.add("show");
+      target.setAttribute("aria-hidden","false");
+
+      // DVD kecil-kecil cuma muncul di part card
+      if(typeof setDvdVisible === 'function'){
+        setDvdVisible(target === sceneCard);
+      }
+    }
+
+    // start on gift
+    // (extra-safe for some mobile browsers)
+    requestAnimationFrame(()=>showScene(sceneGift));
+
+    // ---------- Gift taps ----------
+    const gift = document.getElementById("gift");
+    const MAX = 10;
+    let taps = 0;
+    let busyFinish = false;
+
+    function setGiftVars({s=1, rx=0, ry=0, rz=0, tx=0, ty=0}){
+      gift.style.setProperty("--s", s);
+      gift.style.setProperty("--rx", rx + "deg");
+      gift.style.setProperty("--ry", ry + "deg");
+      gift.style.setProperty("--rz", rz + "deg");
+      gift.style.setProperty("--tx", tx + "px");
+      gift.style.setProperty("--ty", ty + "px");
+    }
+
+    function popParticles(){
+      const rect = gift.getBoundingClientRect();
+      const x = rect.left + rect.width/2;
+      const y = rect.top + rect.height/2;
+      for(let i=0;i<12;i++){
+        const p = document.createElement("div");
+        p.className = "pop";
+        p.style.setProperty("--dx", (Math.random()*160 - 80) + "px");
+        p.style.setProperty("--dy", (Math.random()*-140 - 40) + "px");
+        p.style.left = x + "px";
+        p.style.top = y + "px";
+        document.body.appendChild(p);
+        setTimeout(()=>p.remove(), 700);
+      }
+    }
+
+    function tapAnim(){
+      const r = () => (Math.random()*2 - 1);
+      const rx = r()*10, ry = r()*12, rz = r()*8, tx = r()*10, ty = r()*8;
+      const base = 1 + (taps * 0.03);
+
+      setGiftVars({ s: base*1.06, rx, ry, rz, tx, ty });
+      setTimeout(()=> setGiftVars({ s: base, rx: rx*0.25, ry: ry*0.25, rz: rz*0.2, tx: tx*0.2, ty: ty*0.2 }), 90);
+      setTimeout(()=> setGiftVars({ s: base, rx:0, ry:0, rz:0, tx:0, ty:0 }), 180);
+
+      gift.style.filter = taps >= 7
+        ? "drop-shadow(0 28px 28px rgba(255,61,154,.22)) drop-shadow(0 18px 18px rgba(0,0,0,.18))"
+        : "drop-shadow(0 18px 18px rgba(0,0,0,.18))";
+
+      popParticles();
+    }
+
+    function finishGift(){
+      if(busyFinish) return;
+      busyFinish = true;
+      const base = 1 + (taps * 0.03);
+      setGiftVars({ s: base*1.12, rx: -6, ry: 6, rz: 3, tx: 0, ty: -6 });
+      setTimeout(()=> showScene(sceneGame), 260);
+    }
+
+    function handleTap(){
+      if(busyFinish) return;
+      if(taps >= MAX) return;
+      taps++;
+      tapAnim();
+      if(taps >= MAX) setTimeout(finishGift, 160);
+    }
+
+    gift.addEventListener("click", handleTap, {passive:true});
+    gift.addEventListener("touchstart", handleTap, {passive:true});
+    gift.addEventListener("keydown", (e)=>{ if(e.key === "Enter" || e.key === " ") handleTap(); });
+
+    // ---------- Mini game ----------
+    const choiceRow = document.getElementById("choiceRow");
+    const btnIya = document.getElementById("btnIya");
+    const btnTidak = document.getElementById("btnTidak");
+    const btnBanget = document.getElementById("btnBanget");
+    const warnBox = document.getElementById("warnBox");
+
+    // ---------- Envelope open -> Card ----------
+    const envelope = document.getElementById("envelope");
+    const envHint = document.getElementById("envHint");
+    let opened = false;
+
+    function openEnvelopeThenCard(){
+      if(opened) return;
+      opened = true;
+
+      envelope.classList.add("open");
+      envHint.textContent = "Oke… bentar ya 💗";
+
+      setTimeout(()=>{
+        showScene(sceneCard);
+
+        // render long text
+        renderCard();
+        
+        // restart anim biar muncul halus tiap masuk card
+        titleEl.classList.remove("reveal");
+        msgEl.classList.remove("revealDelay");
+        void titleEl.offsetWidth;
+        titleEl.classList.add("reveal");
+        msgEl.classList.add("revealDelay");
+
+        // start foto DVD floating
+        startDvd();
+      }, 900);
+    }
+
+    envelope.addEventListener("click", openEnvelopeThenCard);
+
+
+    function showWarn(){
+      warnBox.classList.add("show");
+      clearTimeout(showWarn._t);
+      showWarn._t = setTimeout(()=> warnBox.classList.remove("show"), 1400);
+    }
+
+    function moveTidak(){
+      const rect = choiceRow.getBoundingClientRect();
+      const pad = 6;
+      const maxX = rect.width - pad*2;
+      const maxY = rect.height - pad*2;
+      const x = (Math.random()*maxX) - rect.width/2 + pad;
+      const y = (Math.random()*maxY) - rect.height/2 + pad;
+      btnTidak.style.transform = `translate(calc(-50% + ${x}px), ${y}px)`;
+    }
+    moveTidak();
+    btnTidak.addEventListener("mouseenter", moveTidak);
+    btnTidak.addEventListener("click", (e)=>{ e.preventDefault(); moveTidak(); });
+    btnTidak.addEventListener("touchstart", (e)=>{ e.preventDefault(); moveTidak(); }, {passive:false});
+
+    btnIya.addEventListener("click", showWarn);
+    btnIya.addEventListener("touchstart", (e)=>{ e.preventDefault(); showWarn(); }, {passive:false});
+
+    
+    // ---------- Card (1 long text only) ----------
+    const card = document.getElementById("card");
+    const titleEl = document.getElementById("title");
+    const msgEl = document.getElementById("msg");
+    const doneBtn = document.getElementById("doneBtn");
+
+    // ✅ EDIT teks kamu di sini
+    const message = {
+      title: "Hai Zuraa💖",
+      text:
+`Sa mau bilang sesuatu yang agak panjang y (agk gimna tpi y bgitu sdh)
+
+Makasih udah hadir di hidupku. Beneran.
+Entah ko sadar atau nggak, ko tu bikin sa selalu kagum.
+Aku suka caramu bicara, caramu ketawa, bahkan cara ko marah tetap keliatan lucu.
+
+Kalau kadang sa aneh, kadang marah, kadang sa mcam lain lain
+itu bukan karena sa nggak peduli, justru karena sa lagi berpikir.
+sa cuma lagi belajar jadi yang terbaik buat ko kok.
+
+Intinya:
+sa sayang sm ko 🤍
+Happy Valentine yaa cantikk 💗`
+    };
+
+    function renderCard(){
+      titleEl.textContent = message.title;
+      msgEl.textContent = message.text;
+    }
+
+    btnBanget.addEventListener("click", ()=>{
+      // masuk animasi surat dulu 💌
+      showScene(sceneEnvelope);
+
+      // reset state surat tiap masuk
+      opened = false;
+      envelope.classList.remove("open");
+      envHint.textContent = "Klik suratnya ya 😄";
+    });
+
+// ---------- FOTO AUTO GERAK (DVD) DI BACKGROUND (bukan di dalam card) ----------
+
+    // ---------- DVD background (foto kecil-kecil mantul) ----------
+    const dvdEls = [
+      document.getElementById("dvdBg1"),
+      document.getElementById("dvdBg2"),
+      document.getElementById("dvdBg3"),
+    ].filter(Boolean);
+
+    // state per item
+    const dvdState = dvdEls.map((el, i) => ({
+      el,
+      x: 20 + i * 110,
+      y: 20 + i * 90,
+      vx: (Math.random() > 0.5 ? 1 : -1) * (1.2 + Math.random() * 1.6),
+      vy: (Math.random() > 0.5 ? 1 : -1) * (1.0 + Math.random() * 1.5),
+      jitter: 0.18 + Math.random() * 0.18
+    }));
+
+    let dvdRAF = null;
+    function setDvdVisible(show){
+      dvdEls.forEach(el => el.classList.toggle("show", !!show));
+      if(show){
+        startDvd();
+      }else{
+        stopDvd();
+      }
+    }
+
+    function clamp(v, a, b){ return Math.max(a, Math.min(b, v)); }
+
+    function randomizeStart(){
+      dvdState.forEach((s) => {
+        const w = s.el.offsetWidth || 86;
+        const h = s.el.offsetHeight || 86;
+        s.x = Math.random() * Math.max(0, window.innerWidth - w);
+        s.y = Math.random() * Math.max(0, window.innerHeight - h);
+        s.vx = (Math.random() > 0.5 ? 1 : -1) * (1.2 + Math.random() * 1.8);
+        s.vy = (Math.random() > 0.5 ? 1 : -1) * (1.0 + Math.random() * 1.7);
+      });
+    }
+    randomizeStart();
+
+    function tick(){
+      dvdRAF = null;
+
+      const maxW = window.innerWidth;
+      const maxH = window.innerHeight;
+
+      for(const s of dvdState){
+        const w = s.el.offsetWidth || 86;
+        const h = s.el.offsetHeight || 86;
+
+        s.x += s.vx;
+        s.y += s.vy;
+
+        const minX = 0, minY = 0;
+        const maxX = Math.max(0, maxW - w);
+        const maxY = Math.max(0, maxH - h);
+
+        let bounced = false;
+
+        if(s.x <= minX){ s.x = minX; s.vx = Math.abs(s.vx); bounced = true; }
+        if(s.x >= maxX){ s.x = maxX; s.vx = -Math.abs(s.vx); bounced = true; }
+        if(s.y <= minY){ s.y = minY; s.vy = Math.abs(s.vy); bounced = true; }
+        if(s.y >= maxY){ s.y = maxY; s.vy = -Math.abs(s.vy); bounced = true; }
+
+        if(bounced){
+          s.vx += (Math.random()*2-1) * s.jitter;
+          s.vy += (Math.random()*2-1) * s.jitter;
+          s.vx = clamp(s.vx, -3.8, 3.8);
+          s.vy = clamp(s.vy, -3.8, 3.8);
+        }
+
+        s.el.style.transform = `translate(${s.x}px, ${s.y}px)`;
+      }
+
+      dvdRAF = requestAnimationFrame(tick);
+    }
+
+    function startDvd(){
+      if(dvdRAF) return;
+      dvdRAF = requestAnimationFrame(tick);
+    }
+
+    function stopDvd(){
+      if(!dvdRAF) return;
+      cancelAnimationFrame(dvdRAF);
+      dvdRAF = null;
+    }
+
+    window.addEventListener("resize", ()=>{
+      const maxW = window.innerWidth;
+      const maxH = window.innerHeight;
+      dvdState.forEach((s)=>{
+        const w = s.el.offsetWidth || 86;
+        const h = s.el.offsetHeight || 86;
+        s.x = clamp(s.x, 0, Math.max(0, maxW - w));
+        s.y = clamp(s.y, 0, Math.max(0, maxH - h));
+        s.el.style.transform = `translate(${s.x}px, ${s.y}px)`;
+      });
+    });
+// tombol selesai (cuma disable biar ga ngapa-ngapain)
+    doneBtn.addEventListener("click", ()=>{
+      doneBtn.disabled = true;
+      doneBtn.style.opacity = .65;
+      doneBtn.textContent = "Selesai ✅";
+    });
+  </script>
+</body>
+</html>
